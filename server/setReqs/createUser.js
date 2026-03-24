@@ -36,8 +36,9 @@ export async function createUser({username, password, email, preferences = {}}) 
         createdAt: new Date(),
     };
     const db = getDB();
+    let result;
     try {
-        const result = await db.collection(USERS_COLLECTION).insertOne(user);
+        result = await db.collection(USERS_COLLECTION).insertOne(user);
     } catch (e) {
         if (e?.code === 11000) {
             throw new Error('Username or email already exists.');

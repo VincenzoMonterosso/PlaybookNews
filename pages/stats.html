@@ -1,0 +1,325 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <link rel="stylesheet" href="/styles.css" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <style>
+            html, body {
+                color: white;
+            }
+
+            .tab-btn {
+                background: transparent;
+                color: white;
+                border: none;
+                padding: 12px 0;
+                transition: background-color 0.15s ease, color 0.15s ease;
+            }
+
+            .tab-btn:hover,
+            .tab-btn:focus-visible {
+                background-color: rgba(255, 255, 255, 0.12) !important;
+                color: #fff;
+            }
+
+            #big {
+                margin-top: 75px;
+                background-color: rgb(0, 0, 0);
+                border-radius: 10px;
+                border: 1px solid white;
+            }
+
+            #top {
+                border: 1px solid white;
+                border-top: 0px;
+                border-left: 0px;
+                border-right: 0px;
+            }
+
+            .bullet {
+                text-align: left;
+            }
+        </style>
+        <title>PlaybookNews</title>
+    </head>
+    <body>
+        <!-- Navigation bar -->
+        <div>
+            <nav id="nav">
+                <ul>
+                    <li><b>PlaybookNews</b></li>
+                    <li><a href="./">Home</a></li>
+                    <li><a href="/dashboard" class="log" id="change1">Dashboard</a></li>
+                    <li><a href="/news" class="log" id="change2">News</a></li>
+                    <li><a href="/teams" class="log" id="change3">Teams</a></li>
+                    <li><a href="/players" class="log">Players</a></li>
+                    <li><a href="/schedule" class="log">Schedule</a></li>
+                    <li><a href="/stats" class="log">Stats</a></li>
+                    <li class="drop" id="user-dropdown" style="display:none">
+                        <button type="button" class="drop-btn log" id="user-btn">
+                        <span id="user" style="text-shadow: 5px 5px 4px black;"></span>
+                        </button>
+                        <ul class="drop-menu" id="user-menu">
+                        <li><a href="/settings">Settings</a></li>
+                        <li><a href="/logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="container text-center" id="big">
+            <div class="row" id="top">
+                <button class="col-md-6 tab-btn" id="team">Team</button>
+                <button class="col-md-6 tab-btn" id="players">Player</button>
+            </div>
+            <div id="info">
+                <h6 id="section1" style="padding-top: 8px;">Info1</h6>
+                <div class="row">
+                    <div class="col-md-3">
+                        <ul>
+                            <p class="bullet">Thing1: </p>
+                            <p class="bullet">Thing2: </p>
+                            <p class="bullet">Thing3: </p>
+                            <p class="bullet">Thing4: </p>
+                        </ul>
+                    </div>
+                    <div class="col-md-8" style="text-align: right;">
+                        <ul>
+                            <p class="num">w</p>
+                            <p class="num">x</p>
+                            <p class="num">y</p>
+                            <p class="num">z</p>
+                        </ul>
+                    </div>
+                </div>
+
+                <h6 id="section2">Info2</h6>
+                <div class="row">
+                    <div class="col-md-3">
+                        <ul>
+                            <p class="bullet">Thing1: </p>
+                            <p class="bullet">Thing2: </p>
+                            <p class="bullet">Thing3: </p>
+                            <p class="bullet">Thing4: </p>
+                        </ul>
+                    </div>
+                    <div class="col-md-8" style="text-align: right;">
+                        <ul>
+                            <p class="num">w</p>
+                            <p class="num">x</p>
+                            <p class="num">y</p>
+                            <p class="num">z</p>
+                        </ul>
+                    </div>
+                </div>
+
+                <h6 id="section3">Info3</h6>
+                <div class="row">
+                    <div class="col-md-3">
+                        <ul>
+                            <p class="bullet">Thing1: </p>
+                            <p class="bullet">Thing2: </p>
+                            <p class="bullet">Thing3: </p>
+                            <p class="bullet">Thing4: </p>
+                        </ul>
+                    </div>
+                    <div class="col-md-8" style="text-align: right;">
+                        <ul>
+                            <p class="num">w</p>
+                            <p class="num">x</p>
+                            <p class="num">y</p>
+                            <p class="num">z</p>
+                        </ul>
+                    </div>
+                </div>
+
+                <h6 id="section4">Info4</h6>
+                <div class="row">
+                    <div class="col-md-3">
+                        <ul>
+                            <p class="bullet">Thing1: </p>
+                            <p class="bullet">Thing2: </p>
+                            <p class="bullet">Thing3: </p>
+                            <p class="bullet">Thing4: </p>
+                        </ul>
+                    </div>
+                    <div class="col-md-8" style="text-align: right;">
+                        <ul>
+                            <p class="num">w</p>
+                            <p class="num">x</p>
+                            <p class="num">y</p>
+                            <p class="num">z</p>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="module">
+            const TEAM_LABELS = [
+                "Passing Yards", "Rushing Yards", "Passing Yards Allowed", "Rushing Yards Allowed",
+                "Completion Percentage", "Yards per Attempt", "Interceptions", "Touchdowns",
+                "Attempts", "Yards per Attempt", "Fumbles Lost", "Rushing Touchdowns",
+                "Field Goal%", "Average Return Yards", "Punt Yards", ""
+            ];
+
+            const TEAM_KEYS = [
+                "Passing Yards", "Rushing Yards", "Opponent Passing Yards", "Opponent Rushing Yards",
+                "Completion Percentage", "Pass Yards per Attempt", "Interceptions", "Pass Touchdowns",
+                "Attempts", "Rush Yards per Attempt", "Fumbles Lost", "Rushing Touchdowns",
+                "Field Goal%", "Average Return Yards", "Punt Yards", null
+            ];
+
+            let color = "#ffffff";
+            let teamStats = null;
+
+            const teamBtn = document.getElementById("team");
+            const playerBtn = document.getElementById("players");
+
+            // Collects all elms of tyoe and puts them in an array
+            const bulletEls = Array.from(document.querySelectorAll(".bullet"));
+            const numEls = Array.from(document.querySelectorAll(".num"));
+
+
+            // hexToRGBA helper
+            // @param1: string hex, and inputted hex to be converted
+            // @param2: alpha, an integer representing the desired transparency
+
+            // return: the converted rgba value
+            function hexToRgba(hex, alpha = 1) {
+                // If hex is provided we remove the beginning #
+                let h = String(hex || "").replace("#", "").trim();
+
+                // if the hex is of length three, we can just split the characters 1 by 1
+                // duplicate each value, join them together and its ready for rgba conversion
+                if (h.length === 3) h = h.split("").map((c) => c + c).join("");
+
+                // Length is not 6 at this point then it is NOT a valid hex, so just set it to white
+                if (h.length !== 6) return `rgba(255, 255, 255, ${alpha})`;
+
+                // Constructing rgba to return
+                const r = parseInt(h.slice(0, 2), 16);
+                const g = parseInt(h.slice(2, 4), 16);
+                const b = parseInt(h.slice(4, 6), 16);
+                return `rgba(${r}, ${g}, ${b}, ${Math.min(1, Math.max(0, alpha))})`;
+            }
+
+
+            // toDisplayValue helper
+            // @param1: value
+            // Brief: If such value is empty,null, or undefined return "--" if not return the value
+            // Return: Validated value (for error prevention)
+            function toDisplayValue(value) {
+                return value === null || value === undefined || value === "" ? "--" : String(value);
+            }
+
+            // setSections
+            // @params: none
+            // This sets the sections for team stats
+            // return: none
+            function setSections() {
+                document.getElementById("section1").textContent = "Yardage";
+                document.getElementById("section2").textContent = "Passing";
+                document.getElementById("section3").textContent = "Rushing";
+                document.getElementById("section4").textContent = "Special Teams";
+            }
+
+            // renderTeamStats Helper
+            // Brief: Writes team stat labels + values into the visible rows
+            // Return:
+            // void -> updates the DOM in-place
+            function renderTeamStats() {
+                setSections();
+
+                TEAM_LABELS.forEach((label, i) => {
+                    if (bulletEls[i]) bulletEls[i].textContent = label ? `${label}:` : "";
+                    const key = TEAM_KEYS[i];
+                    const value = key && teamStats ? teamStats[key] : "";
+                    if (numEls[i]) numEls[i].textContent = toDisplayValue(value);
+                });
+            }
+
+            // TODO: Implement/GetRidOf
+            function renderPlayerPlaceholder() {
+                // Keeping the player tab simple until a player-stats endpoint is added.
+                bulletEls.forEach((el, i) => el.textContent = i === 0 ? "Player stats:" : "");
+                numEls.forEach((el, i) => el.textContent = i === 0 ? "Coming soon" : "");
+                document.getElementById("section1").textContent = "Players";
+                document.getElementById("section2").textContent = "";
+                document.getElementById("section3").textContent = "";
+                document.getElementById("section4").textContent = "";
+            }
+
+            // setTabStyles
+            // @param1: activeTab, a string that represents which of the two tabs are active (either player or team)
+            // Brief: sets up the styling for the active tab
+            // return: nothing, nada, niente
+            function setTabStyles(activeTab) {
+                if (!teamBtn || !playerBtn) return;
+                const activeColor = color || "#ffffff";
+                if (activeTab === "team") {
+                    teamBtn.style.color = activeColor;
+                    teamBtn.style.backgroundColor = hexToRgba(activeColor, 0.2);
+                    playerBtn.style.color = "white";
+                    playerBtn.style.backgroundColor = "transparent";
+                    return;
+                }
+
+                playerBtn.style.color = activeColor;
+                playerBtn.style.backgroundColor = hexToRgba(activeColor, 0.2);
+                teamBtn.style.color = "white";
+                teamBtn.style.backgroundColor = "transparent";
+            }
+
+            // setupPage
+            // Brief: the actual stuffs
+            async function setupPage() {
+                try {
+                    const preloadRes = await fetch("/api/preferred-data?include=stats", { credentials: "include" });
+                    if (!preloadRes.ok) throw new Error("not logged in");
+                    const preload = await preloadRes.json();
+
+                    // Sets username if valid and sets dropEl
+                    document.getElementById("user").textContent = preload?.username || "";
+                    const dropEl = document.getElementById("user-dropdown");
+                    if (dropEl) dropEl.style.display = "block";
+
+                    const preferredTeam = preload?.team;
+                    if (preferredTeam?.colors?.[0]) {
+                        color = preferredTeam.colors[0];
+                        document.getElementById("nav").style.background = `linear-gradient(to bottom, ${color}, rgba(0,0,0,0))`;
+                    }
+                    teamStats = preload?.stats ?? null;
+
+                    renderTeamStats();
+                    setTabStyles("team");
+                } catch (err) { // Not logged in
+                    document.querySelectorAll(".log").forEach((el) => el.textContent = "");
+                    document.getElementById("change1").textContent = "Login";
+                    document.getElementById("change1").href = "/login";
+                    document.getElementById("change2").textContent = "Sign Up";
+                    document.getElementById("change2").href = "/signup";
+                    const dropEl = document.getElementById("user-dropdown");
+                    if (dropEl) dropEl.style.display = "none";
+                    renderTeamStats();
+                }
+            }
+
+            if (teamBtn && playerBtn) { // change tab
+                teamBtn.addEventListener("click", () => {
+                    renderTeamStats();
+                    setTabStyles("team");
+                });
+
+                playerBtn.addEventListener("click", () => {
+                    renderPlayerPlaceholder();
+                    setTabStyles("players");
+                });
+            }
+
+            setupPage();
+        </script>
+    </body>
+</html>

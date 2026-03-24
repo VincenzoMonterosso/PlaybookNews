@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <link rel="stylesheet" href="/styles.css" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <style>
+            body {
+                color: white;
+            }
+
+            .panel {
+                margin-top: 2.25rem;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                border-radius: 12px;
+                background: rgba(0, 0, 0, 0.35);
+                box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+                overflow: hidden;
+            }
+
+            .table-wrap {
+                overflow-x: auto;
+            }
+
+            .schedule-table {
+                color: white;
+                margin-bottom: 0;
+            }
+
+            .schedule-table thead th {
+                border-bottom-color: rgba(255, 255, 255, 0.35);
+                white-space: nowrap;
+            }
+
+            .schedule-table td {
+                white-space: nowrap;
+                border-top-color: rgba(255, 255, 255, 0.18);
+            }
+        </style>
+        <title>PlaybookNews</title>
+    </head>
+    <body>
+        <!-- Navigation bar -->
+        <div>
+            <nav id="nav">
+                <ul>
+                    <li><b>PlaybookNews</b></li>
+                    <li><a href="./">Home</a></li>
+                    <li><a href="/dashboard" class="log" id="change1">Dashboard</a></li>
+                    <li><a href="/news" class="log" id="change2">News</a></li>
+                    <li><a href="/teams" class="log" id="change3">Teams</a></li>
+                    <li><a href="/players" class="log">Players</a></li>
+                    <li><a href="/schedule" class="log">Schedule</a></li>
+                    <li><a href="/stats" class="log">Stats</a></li>
+                    <li class="drop" id="user-dropdown" style="display:none">
+                        <button type="button" class="drop-btn log" id="user-btn">
+                        <span id="user" style="text-shadow: 5px 5px 4px black;"></span>
+                        </button>
+                        <ul class="drop-menu" id="user-menu">
+                        <li><a href="/settings">Settings</a></li>
+                        <li><a href="/logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <main class="container py-4">
+            <h1 class="mb-3">Team Schedule</h1>
+            <p class="text-white-50 mb-0" id="schedule-subtitle">Loading preferred team schedule...</p>
+            <div class="panel mt-3">
+                <div class="table-wrap">
+                    <table class="table schedule-table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>Week</th>
+                                <th>Date</th>
+                                <th>Opponent</th>
+                                <th>Venue</th>
+                                <th>Status</th>
+                                <th>Channel</th>
+                            </tr>
+                        </thead>
+                        <tbody id="schedule-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <script>
+            function formatValue(value) {
+                return value === null || value === undefined || value === "" ? "--" : String(value);
+            }
+
+            function formatDate(value) {
+                if (!value) return "--";
+                const date = new Date(value);
+                if (Number.isNaN(date.getTime())) return "--";
+                return date.toLocaleString(undefined, {
+                    month: "short",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                });
+            }
+
+            function createScheduleRow(game) {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${formatValue(game.week)}</td>
+                    <td>${formatDate(game.dateTime)}</td>
+                    <td>${formatValue(game.opponent)}</td>
+                    <td>${formatValue(game.homeAway)}</td>
+                    <td>${formatValue(game.status)}</td>
+                    <td>${formatValue(game.channel)}</td>
+                `;
+                return tr;
+            }
+
+            function renderSchedule(games) {
+                const body = document.getElementById("schedule-body");
+                body.innerHTML = "";
+
+                if (!Array.isArray(games) || games.length === 0) {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `<td colspan="6" class="text-white-50">No schedule data available.</td>`;
+                    body.appendChild(tr);
+                    return;
+                }
+
+                games.forEach((game) => body.appendChild(createScheduleRow(game)));
+            }
+
+            (async () => {
+                try {
+                    const res = await fetch('/api/preferred-data?include=schedule', { credentials: 'include' });
+                    if (!res.ok) throw new Error('not logged in');
+                    const data = await res.json();
+
+                    document.getElementById('user').textContent = data?.username || '';
+                    const dropEl = document.getElementById('user-dropdown');
+                    if (dropEl) dropEl.style.display = 'block';
+
+                    const team = data?.team;
+                    if (team?.colors?.[0]) {
+                        document.getElementById('nav').style.background = `linear-gradient(to bottom, ${team.colors[0]}, rgba(0,0,0,0))`;
+                    }
+
+                    const preferredTeam = data?.preferences?.team || "Preferred Team";
+                    document.getElementById("schedule-subtitle").textContent = `Showing ${data?.season || ""} schedule for ${preferredTeam}.`.trim();
+                    renderSchedule(data?.schedule || []);
+                } catch (err) {
+                    // User is not logged in: hide gated nav items and show login/signup links.
+                    document.querySelectorAll('.log').forEach(el => el.textContent = '');
+                    document.getElementById('change1').textContent = 'Login';
+                    document.getElementById('change1').href = '/login';
+                    document.getElementById('change2').textContent = 'Sign Up';
+                    document.getElementById('change2').href = '/signup';
+                    const dropEl = document.getElementById('user-dropdown');
+                    if (dropEl) dropEl.style.display = 'none';
+                    document.getElementById("schedule-subtitle").textContent = "Log in to view schedule data.";
+                    renderSchedule([]);
+                }
+            })();
+        </script>
+    </body>
+</html>

@@ -1,12 +1,14 @@
 import express from "express";
 import cookieParser from "cookie-parser";
-import fs from 'fs/promises';
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
 import { connectDB, getDB } from "./db.js";
 import { loginUser } from "./getReqs/loginUser.js";
 import { requireAuth, requireAuthPage, reverseAuthPage, reverseAuth } from "./auth.js";
 import { createUser } from "./setReqs/createUser.js";
+import { fetchData } from "./fetch.js";
+import { getTeamByPreferenceKey } from "./teamData.js";
+import { getPreferredData } from "./preferredData.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -431,8 +433,7 @@ app.get("/pref.html", requireAuthPage, (req, res) => {
 // Brief: Serves specified team info from json object
 app.get('/api/team/:id', async (req, res) => {
     try {
-        const teams = JSON.parse(await fs.readFile(path.join(__dirname, './teams.json')));
-        const team = teams[req.params.id];
+        const team = await getTeamByPreferenceKey(req.params.id);
         if (!team) {
             return res.status(404).json({ message: "Team not found" });
         }
@@ -441,6 +442,81 @@ app.get('/api/team/:id', async (req, res) => {
         res.status(500).json({message: "Server Error"});
     }
 });
+
+app.get("/api/preferred-data", requireAuth, async (req, res) => {
+    try {
+        if (!req.user?.username) {
+            return res.status(401).json({ error: "not logged in" });
+        }
+
+        const db = getDB();
+        const user = await db.collection("users").findOne(
+            { username: req.user.username },
+            { projection: { username: 1, preferences: 1 } }
+        );
+
+        if (!user) {
+            return res.status(401).json({ error: "not logged in" });
+        }
+
+        const preferredTeamKey = user.preferences?.team;
+        const team = await getTeamByPreferenceKey(preferredTeamKey);
+        if (!team) {
+            return res.status(400).json({ error: "No valid preferred team set" });
+        }
+
+        const includeParam = String(req.query.include || "stats,players,schedule");
+        const include = new Set(
+            includeParam
+                .split(",")
+                .map((value) => value.trim().toLowerCase())
+                .filter((value) => value === "stats" || value === "players" || value === "schedule")
+        );
+
+        if (include.size === 0) {
+            include.add("stats");
+            include.add("players");
+            include.add("schedule");
+        }
+
+        const season = Number(req.query.season) || 2025;
+        const preferredData = await getPreferredData({ team, season, include });
+
+        return res.json({
+            username: user.username,
+            preferences: user.preferences ?? {},
+            team,
+            season,
+            ...preferredData,
+        });
+    } catch (err) {
+        return res.status(500).json({ error: "Server error" });
+    }
+});
+
+// App Team Stats Get Request
+// Brief: Proxies team stats from SportsDataIO for a given team id
+app.get("/api/team/:id/stats", requireAuth, async (req, res) => {
+    try {
+        const teamId = Number(req.params.id);
+        const season = Number(req.query.season) || 2025;
+
+        if (!Number.isFinite(teamId)) {
+            return res.status(400).json({ error: "Invalid team id" });
+        }
+
+        const stats = await fetchData(teamId, season);
+        if (!stats || stats.ok !== "yes") {
+            return res.status(502).json({ error: "Unable to fetch team stats" });
+        }
+
+        return res.json(stats);
+    } catch (err) {
+        return res.status(500).json({ error: "Server error" });
+    }
+});
+
+
 
 console.log("Connecting to database and starting server...");
 await connectDB();

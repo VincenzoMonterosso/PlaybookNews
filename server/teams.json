@@ -1,5 +1,5 @@
 {
-    "Arizona Cardinals": {
+    "Arizona": {
         "city": "Glendale",
         "stadium": "State Farm Stadium",
         "conference": "NFC",
@@ -8,9 +8,10 @@
             "#97233f",
             "#000000",
             "#ffffff"
-        ]
+        ],
+        "id": 22
     },
-    "Atlanta Falcons": {
+    "Atlanta": {
         "city": "Atlanta",
         "stadium": "Mercedes-Benz Stadium",
         "conference": "NFC",
@@ -20,9 +21,10 @@
             "#000000",
             "#ffffff",
             "#c0c0c0"
-        ]
+        ],
+        "id": 1
     },
-    "Baltimore Ravens": {
+    "Baltimore": {
         "city": "Baltimore",
         "stadium": "M&T Bank Stadium",
         "conference": "AFC",
@@ -32,9 +34,10 @@
             "#000000",
             "#d4af37",
             "#ffffff"
-        ]
+        ],
+        "id": 33
     },
-    "Buffalo Bills": {
+    "Buffalo": {
         "city": "Buffalo",
         "stadium": "Highmark Stadium",
         "conference": "AFC",
@@ -43,9 +46,10 @@
             "#4169e1",
             "#d50a0a",
             "#ffffff"
-        ]
+        ],
+        "id": 2
     },
-    "Carolina Panthers": {
+    "Carolina": {
         "city": "Charlotte",
         "stadium": "Bank of America Stadium",
         "conference": "NFC",
@@ -55,9 +59,10 @@
             "#0088ce",
             "#c0c0c0",
             "#ffffff"
-        ]
+        ],
+        "id": 29
     },
-    "Chicago Bears": {
+    "Chicago": {
         "city": "Chicago",
         "stadium": "Soldier Field",
         "conference": "NFC",
@@ -66,9 +71,10 @@
             "#000080",
             "#ff8f00",
             "#ffffff"
-        ]
+        ],
+        "id": 3
     },
-    "Cincinnati Bengals": {
+    "Cincinnati": {
         "city": "Cincinnati",
         "stadium": "Paycor Stadium",
         "conference": "AFC",
@@ -77,9 +83,10 @@
             "#000000",
             "#ff8f00",
             "#ffffff"
-        ]
+        ],
+        "id": 4
     },
-    "Cleveland Browns": {
+    "Cleveland": {
         "city": "Cleveland",
         "stadium": "FirstEnergy Stadium",
         "conference": "AFC",
@@ -88,9 +95,10 @@
             "#4b2b1d",
             "#ff8f00",
             "#ffffff"
-        ]
+        ],
+        "id": 5
     },
-    "Dallas Cowboys": {
+    "Dallas": {
         "city": "Arlington",
         "stadium": "AT&T Stadium",
         "conference": "NFC",
@@ -99,9 +107,10 @@
             "#000080",
             "#c0c0c0",
             "#ffffff"
-        ]
+        ],
+        "id": 6
     },
-    "Denver Broncos": {
+    "Denver": {
         "city": "Denver",
         "stadium": "Empower Field at Mile High",
         "conference": "AFC",
@@ -110,9 +119,10 @@
             "#ff8f00",
             "#000080",
             "#ffffff"
-        ]
+        ],
+        "id": 7
     },
-    "Detroit Lions": {
+    "Detroit": {
         "city": "Detroit",
         "stadium": "Ford Field",
         "conference": "NFC",
@@ -122,9 +132,10 @@
             "#c0c0c0",
             "#000000",
             "#ffffff"
-        ]
+        ],
+        "id": 8
     },
-    "Green Bay Packers": {
+    "Green Bay": {
         "city": "Green Bay",
         "stadium": "Lambeau Field",
         "conference": "NFC",
@@ -133,9 +144,10 @@
             "#006400",
             "#d4af37",
             "#ffffff"
-        ]
+        ],
+        "id": 9
     },
-    "Houston Texans": {
+    "Houston": {
         "city": "Houston",
         "stadium": "NRG Stadium",
         "conference": "AFC",
@@ -144,9 +156,10 @@
             "#003d7d",
             "#a71930",
             "#ffffff"
-        ]
+        ],
+        "id": 34
     },
-    "Indianapolis Colts": {
+    "Indianapolis": {
         "city": "Indianapolis",
         "stadium": "Lucas Oil Stadium",
         "conference": "AFC",
@@ -154,9 +167,10 @@
         "colors": [
             "#4169e1",
             "#ffffff"
-        ]
+        ],
+        "id": 11
     },
-    "Jacksonville Jaguars": {
+    "Jacksonville": {
         "city": "Jacksonville",
         "stadium": "TIAA Bank Field",
         "conference": "AFC",
@@ -166,9 +180,10 @@
             "#000000",
             "#d4af37",
             "#ffffff"
-        ]
+        ],
+        "id": 30
     },
-    "Kansas City Chiefs": {
+    "Kansas City": {
         "city": "Kansas City",
         "stadium": "GEHA Field at Arrowhead Stadium",
         "conference": "AFC",
@@ -177,9 +192,10 @@
             "#d50a0a",
             "#d4af37",
             "#ffffff"
-        ]
+        ],
+        "id": 12
     },
-    "Las Vegas Raiders": {
+    "Las Vegas": {
         "city": "Paradise",
         "stadium": "Allegiant Stadium",
         "conference": "AFC",
@@ -187,9 +203,10 @@
         "colors": [
             "#c0c0c0",
             "#000000"
-        ]
+        ],
+        "id": 13
     },
-    "Los Angeles Chargers": {
+    "Los Angeles (AFC)": {
         "city": "Inglewood",
         "stadium": "SoFi Stadium",
         "conference": "AFC",
@@ -199,9 +216,10 @@
             "#d4af37",
             "#ffffff",
             "#000080"
-        ]
+        ],
+        "id": 24
     },
-    "Los Angeles Rams": {
+    "Los Angeles (NFC)": {
         "city": "Inglewood",
         "stadium": "SoFi Stadium",
         "conference": "NFC",
@@ -210,9 +228,10 @@
             "#4169e1",
             "#ffb612",
             "#ffffff"
-        ]
+        ],
+        "id": 14
     },
-    "Miami Dolphins": {
+    "Miami": {
         "city": "Miami Gardens",
         "stadium": "Hard Rock Stadium",
         "conference": "AFC",
@@ -221,9 +240,10 @@
             "#00ffff",
             "#ff8f00",
             "#ffffff"
-        ]
+        ],
+        "id": 15
     },
-    "Minnesota Vikings": {
+    "Minnesota": {
         "city": "Minneapolis",
         "stadium": "U.S. Bank Stadium",
         "conference": "NFC",
@@ -232,9 +252,10 @@
             "#4b006e",
             "#d4af37",
             "#ffffff"
-        ]
+        ],
+        "id": 16
     },
-    "New England Patriots": {
+    "New England": {
         "city": "Foxborough",
         "stadium": "Gillette Stadium",
         "conference": "AFC",
@@ -244,9 +265,10 @@
             "#d50a0a",
             "#c0c0c0",
             "#ffffff"
-        ]
+        ],
+        "id": 17
     },
-    "New Orleans Saints": {
+    "New Orleans": {
         "city": "New Orleans",
         "stadium": "Caesars Superdome",
         "conference": "NFC",
@@ -255,9 +277,10 @@
             "#000000",
             "#cfb53b",
             "#ffffff"
-        ]
+        ],
+        "id": 18
     },
-    "New York Giants": {
+    "New York (NFC)": {
         "city": "East Rutherford",
         "stadium": "MetLife Stadium",
         "conference": "NFC",
@@ -266,9 +289,10 @@
             "#4169e1",
             "#d50a0a",
             "#ffffff"
-        ]
+        ],
+        "id": 19
     },
-    "New York Jets": {
+    "New York (AFC)": {
         "city": "East Rutherford",
         "stadium": "MetLife Stadium",
         "conference": "AFC",
@@ -277,9 +301,10 @@
             "#003f2d",
             "#ffffff",
             "#000000"
-        ]
+        ],
+        "id": 20
     },
-    "Philadelphia Eagles": {
+    "Philadelphia": {
         "city": "Philadelphia",
         "stadium": "Lincoln Financial Field",
         "conference": "NFC",
@@ -289,9 +314,10 @@
             "#c0c0c0",
             "#000000",
             "#ffffff"
-        ]
+        ],
+        "id": 21
     },
-    "Pittsburgh Steelers": {
+    "Pittsburgh": {
         "city": "Pittsburgh",
         "stadium": "Acrisure Stadium",
         "conference": "AFC",
@@ -300,9 +326,10 @@
             "#000000",
             "#d4af37",
             "#ffffff"
-        ]
+        ],
+        "id": 23
     },
-    "San Francisco 49ers": {
+    "San Francisco": {
         "city": "Santa Clara",
         "stadium": "Levi's Stadium",
         "conference": "NFC",
@@ -311,9 +338,10 @@
             "#c8102e",
             "#d4af37",
             "#ffffff"
-        ]
+        ],
+        "id": 25
     },
-    "Seattle Seahawks": {
+    "Seattle": {
         "city": "Seattle",
         "stadium": "Lumen Field",
         "conference": "NFC",
@@ -322,9 +350,10 @@
             "#002244",
             "#69be28",
             "#a5acaf"
-        ]
+        ],
+        "id": 26
     },
-    "Tampa Bay Buccaneers": {
+    "Tampa Bay": {
         "city": "Tampa",
         "stadium": "Raymond James Stadium",
         "conference": "NFC",
@@ -335,9 +364,10 @@
             "#000000",
             "#ff8f00",
             "#ffffff"
-        ]
+        ],
+        "id": 27
     },
-    "Tennessee Titans": {
+    "Tennessee": {
         "city": "Nashville",
         "stadium": "Nissan Stadium",
         "conference": "AFC",
@@ -347,9 +377,10 @@
             "#4b92db",
             "#d50a0a",
             "#ffffff"
-        ]
+        ],
+        "id": 10
     },
-    "Washington Commanders": {
+    "Washington": {
         "city": "Landover",
         "stadium": "FedExField",
         "conference": "NFC",
@@ -358,6 +389,7 @@
             "#5a1414",
             "#d4af37",
             "#ffffff"
-        ]
+        ],
+        "id": 28
     }
 }

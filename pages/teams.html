@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <link rel="stylesheet" href="/styles.css" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <style>
+        
+        </style>
+        <title>PlaybookNews</title>
+    </head>
+    <body>
+        <!-- Navigation bar -->
+        <div>
+            <nav id="nav">
+                <ul>
+                    <li><b>PlaybookNews</b></li>
+                    <li><a href="./">Home</a></li>
+                    <li><a href="/dashboard" class="log" id="change1">Dashboard</a></li>
+                    <li><a href="/news" class="log" id="change2">News</a></li>
+                    <li><a href="/teams" class="log" id="change3">Teams</a></li>
+                    <li><a href="/players" class="log">Players</a></li>
+                    <li><a href="/schedule" class="log">Schedule</a></li>
+                    <li><a href="/stats" class="log">Stats</a></li>
+                    <li class="drop" id="user-dropdown" style="display:none">
+                        <button type="button" class="drop-btn log" id="user-btn">
+                        <span id="user" style="text-shadow: 5px 5px 4px black;"></span>
+                        </button>
+                        <ul class="drop-menu" id="user-menu">
+                        <li><a href="/settings">Settings</a></li>
+                        <li><a href="/logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <script>
+            (async () => {
+                try {
+                    const res = await fetch('/api/me', { credentials: 'include' });
+                    if (!res.ok) throw new Error('not logged in');
+                    const data = await res.json();
+
+                    document.getElementById('user').textContent = data?.username || '';
+                    const dropEl = document.getElementById('user-dropdown');
+                    if (dropEl) dropEl.style.display = 'block';
+
+                    if (data.preferences?.team) {
+                        const teamRes = await fetch(`/api/team/${encodeURIComponent(data.preferences.team)}`, { credentials: 'include' });
+                        if (teamRes.ok) {
+                            const team = await teamRes.json();
+                            const color = team?.colors?.[0];
+                            if (color) {
+                                document.getElementById('nav').style.background = `linear-gradient(to bottom, ${color}, rgba(0,0,0,0))`;
+                            }
+                        }
+                    }
+                } catch (err) {
+                    // User is not logged in: hide gated nav items and show login/signup links.
+                    document.querySelectorAll('.log').forEach(el => el.textContent = '');
+                    document.getElementById('change1').textContent = 'Login';
+                    document.getElementById('change1').href = '/login';
+                    document.getElementById('change2').textContent = 'Sign Up';
+                    document.getElementById('change2').href = '/signup';
+                    const dropEl = document.getElementById('user-dropdown');
+                    if (dropEl) dropEl.style.display = 'none';
+                }
+            })();
+        </script>
+    </body>
+</html>
