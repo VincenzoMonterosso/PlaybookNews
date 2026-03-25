@@ -75,6 +75,12 @@ app.post("/api/preferences", requireAuth,  async (req, res) => {
         if (typeof preferences !== "object") {
             return res.status(400).json({ error: "Invalid preferences format" });
         }
+        if (preferences?.team !== undefined) {
+            const team = await getTeamByPreferenceKey(preferences.team);
+            if (!team) {
+                return res.status(400).json({ error: "Invalid team key. Use location-only team names." });
+            }
+        }
 
         if (!req.user?.id) {
             return res.status(401).json({ error: "not logged in" });
@@ -106,6 +112,12 @@ app.post('/api/updateUsr', requireAuth, async (req,res) => {
         }
 
         if (preferences && typeof preferences === "object") {
+            if (preferences?.team !== undefined) {
+                const team = await getTeamByPreferenceKey(preferences.team);
+                if (!team) {
+                    return res.status(400).json({ error: "Invalid team key. Use location-only team names." });
+                }
+            }
             update.preferences = preferences;
         }
 

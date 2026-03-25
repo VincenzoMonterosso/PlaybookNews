@@ -24,8 +24,21 @@
             }
 
             .players-table {
-                color: white;
+                color: #fff !important;
                 margin-bottom: 0;
+                --bs-table-color: #fff;
+                --bs-table-bg: #000;
+                --bs-table-striped-color: #fff;
+                --bs-table-striped-bg: #000;
+                --bs-table-hover-color: #fff;
+                --bs-table-hover-bg: #111;
+                --bs-table-border-color: rgba(255, 255, 255, 0.18);
+            }
+
+            .players-table > :not(caption) > * > * {
+                background-color: #000 !important;
+                color: #fff !important;
+                text-shadow: none !important;
             }
 
             .players-table thead th {
