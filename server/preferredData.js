@@ -135,7 +135,7 @@ export async function getPreferredData({ team, season = 2025, include = new Set(
       ? getCachedValue(`players:${safeSeason}:${teamCode}`, CACHE_TTL.players, () => loadPreferredPlayers(teamCode, safeSeason))
       : Promise.resolve([]),
     wantsSchedule && teamCode
-      ? getCachedValue(`schedule:${safeSeason}`, CACHE_TTL.schedule, () => loadPreferredSchedule(teamCode, safeSeason))
+      ? getCachedValue(`schedule:${safeSeason}:${teamCode}`, CACHE_TTL.schedule, () => loadPreferredSchedule(teamCode, safeSeason))
       : Promise.resolve([]),
   ]);
 

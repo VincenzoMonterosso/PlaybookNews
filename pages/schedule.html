@@ -12,21 +12,37 @@
 
             .panel {
                 margin-top: 2.25rem;
-                border: 1px solid rgba(255, 255, 255, 0.3);
+                border: 1px solid var(--team-secondary, rgba(255, 255, 255, 0.65)) !important;
                 border-radius: 12px;
-                background: rgba(0, 0, 0, 0.35);
+                background: #000 !important;
+                color: white !important;
+                text-shadow: none !important;
                 box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
                 overflow: hidden;
             }
+
 
             .table-wrap {
                 overflow-x: auto;
             }
 
             .schedule-table {
-                color: white;
+                color: white !important;
                 margin-bottom: 0;
+                --bs-table-color: #fff;
+                --bs-table-bg: #000;
+                --bs-table-striped-color: #fff;
+                --bs-table-striped-bg: #000;
+                --bs-table-hover-color: #fff;
+                --bs-table-hover-bg: #111;
+                --bs-table-border-color: rgba(255, 255, 255, 0.18);
             }
+
+            /* .schedule-table > :not(caption) > * > * {
+                background-color: #000 !important;
+                color: #fff !important;
+                text-shadow: none !important;
+            } */
 
             .schedule-table thead th {
                 border-bottom-color: rgba(255, 255, 255, 0.35);
@@ -145,6 +161,9 @@
                     const team = data?.team;
                     if (team?.colors?.[0]) {
                         document.getElementById('nav').style.background = `linear-gradient(to bottom, ${team.colors[0]}, rgba(0,0,0,0))`;
+                    }
+                    if (team?.colors?.[1]) {
+                        document.documentElement.style.setProperty('--team-secondary', team.colors[1]);
                     }
 
                     const preferredTeam = data?.preferences?.team || "Preferred Team";
