@@ -28,12 +28,12 @@
                 margin-top: 75px;
                 background-color: #000;
                 border-radius: 10px;
-                border: 1px solid white;
+                border: 1px solid var(--team-secondary, rgba(255, 255, 255, 0.65)) !important;
                 overflow: hidden;
             }
 
             #top {
-                border-bottom: 1px solid white;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.18);
             }
 
             .conference-panel {
@@ -46,7 +46,7 @@
             }
 
             .division-card {
-                border: 1px solid rgba(255, 255, 255, 0.2);
+                border: 1px solid var(--team-secondary, rgba(255, 255, 255, 0.2));
                 border-radius: 10px;
                 background: rgba(255, 255, 255, 0.04);
                 padding: 0.9rem;
@@ -212,26 +212,6 @@
                 return `rgba(${r}, ${g}, ${b}, ${Math.min(1, Math.max(0, alpha))})`;
             }
 
-            function setConferenceTab(activeTab) {
-                if (!afcTabBtn || !nfcTabBtn || !afcPanel || !nfcPanel) return;
-
-                if (activeTab === "afc") {
-                    afcPanel.classList.add("active");
-                    nfcPanel.classList.remove("active");
-                    afcTabBtn.style.color = color;
-                    afcTabBtn.style.backgroundColor = hexToRgba(color, 0.2);
-                    nfcTabBtn.style.color = "white";
-                    nfcTabBtn.style.backgroundColor = "transparent";
-                    return;
-                }
-
-                nfcPanel.classList.add("active");
-                afcPanel.classList.remove("active");
-                nfcTabBtn.style.color = color;
-                nfcTabBtn.style.backgroundColor = hexToRgba(color, 0.2);
-                afcTabBtn.style.color = "white";
-                afcTabBtn.style.backgroundColor = "transparent";
-            }
 
             (async () => {
                 try {
@@ -248,13 +228,16 @@
                         if (teamRes.ok) {
                             const team = await teamRes.json();
                             const navColor = team?.colors?.[0];
+                            const secondaryColor = team?.colors?.[1];
                             if (navColor) {
                                 color = navColor;
                                 document.getElementById('nav').style.background = `linear-gradient(to bottom, ${color}, rgba(0,0,0,0))`;
                             }
+                            if (secondaryColor) {
+                                document.documentElement.style.setProperty('--team-secondary', secondaryColor);
+                            }
                         }
                     }
-                    setConferenceTab("afc");
                 } catch (err) {
                     // User is not logged in: hide gated nav items and show login/signup links.
                     document.querySelectorAll('.log').forEach(el => el.textContent = '');
@@ -264,13 +247,27 @@
                     document.getElementById('change2').href = '/signup';
                     const dropEl = document.getElementById('user-dropdown');
                     if (dropEl) dropEl.style.display = 'none';
-                    setConferenceTab("afc");
                 }
             })();
 
-            if (afcTabBtn && nfcTabBtn) {
-                afcTabBtn.addEventListener("click", () => setConferenceTab("afc"));
-                nfcTabBtn.addEventListener("click", () => setConferenceTab("nfc"));
+            if (afcTabBtn && nfcTabBtn) { // Selecting
+
+                afcTabBtn.addEventListener("click", () => { // AFC
+                    afcPanel.classList.add("active");
+                    nfcPanel.classList.remove("active");
+                    afcTabBtn.style.color = color;
+                    afcTabBtn.style.backgroundColor = hexToRgba(color, 0.2);
+                    nfcTabBtn.style.color = "white";
+                    nfcTabBtn.style.backgroundColor = "transparent";
+                });
+                nfcTabBtn.addEventListener("click", () => { // NFC
+                    nfcPanel.classList.add("active");
+                    afcPanel.classList.remove("active");
+                    nfcTabBtn.style.color = color;
+                    nfcTabBtn.style.backgroundColor = hexToRgba(color, 0.2);
+                    afcTabBtn.style.color = "white";
+                    afcTabBtn.style.backgroundColor = "transparent";
+                });
             }
         </script>
     </body>

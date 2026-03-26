@@ -107,17 +107,24 @@
                 return value === null || value === undefined || value === "" ? "--" : String(value);
             }
 
+            function formatStat(value) {
+                if (value === null || value === undefined || value === "") return "--";
+                const num = Number(value);
+                if (!Number.isFinite(num)) return formatValue(value);
+                return Number.isInteger(num) ? String(num) : String(Number(num.toFixed(2)));
+            }
+
             function createPlayerRow(player) {
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
                     <td>${formatValue(player.name)}</td>
                     <td>${formatValue(player.position)}</td>
-                    <td>${formatValue(player.gamesPlayed)}</td>
-                    <td>${formatValue(player.totalTouchdowns)}</td>
-                    <td>${formatValue(player.passingYards)}</td>
-                    <td>${formatValue(player.rushingYards)}</td>
-                    <td>${formatValue(player.receivingYards)}</td>
-                    <td>${formatValue(player.tackles)}</td>
+                    <td>${formatStat(player.gamesPlayed)}</td>
+                    <td>${formatStat(player.totalTouchdowns)}</td>
+                    <td>${formatStat(player.passingYards)}</td>
+                    <td>${formatStat(player.rushingYards)}</td>
+                    <td>${formatStat(player.receivingYards)}</td>
+                    <td>${formatStat(player.tackles)}</td>
                 `;
                 return tr;
             }

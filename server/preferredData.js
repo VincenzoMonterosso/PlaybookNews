@@ -10,7 +10,12 @@ const CACHE_TTL = {
 };
 
 function toNumber(value) {
-  return typeof value === "number" && Number.isFinite(value) ? value : 0;
+  const num = Number(value);
+  return Number.isFinite(num) ? num : 0;
+}
+
+function toCount(value) {
+  return Math.round(toNumber(value));
 }
 
 function sportsDataKey() {
@@ -43,20 +48,24 @@ function normalizePlayers(rows) {
   return rows
     .filter((row) => row?.Played)
     .map((row) => {
-      const touchdowns =
-        toNumber(row.PassingTouchdowns) +
-        toNumber(row.RushingTouchdowns) +
-        toNumber(row.ReceivingTouchdowns) +
-        toNumber(row.KickReturnTouchdowns) +
-        toNumber(row.PuntReturnTouchdowns) +
-        toNumber(row.InterceptionReturnTouchdowns) +
-        toNumber(row.FumbleReturnTouchdowns);
+      const touchdownsFromParts =
+        toCount(row.PassingTouchdowns) +
+        toCount(row.RushingTouchdowns) +
+        toCount(row.ReceivingTouchdowns) +
+        toCount(row.KickReturnTouchdowns) +
+        toCount(row.PuntReturnTouchdowns) +
+        toCount(row.InterceptionReturnTouchdowns) +
+        toCount(row.FumbleReturnTouchdowns);
+
+      // SportsData "Touchdowns" can represent a subset for some players in this feed.
+      // Use summed touchdown components for a stable, position-agnostic total.
+      const touchdowns = touchdownsFromParts;
 
       return {
         name: row.Name || "Unknown",
         number: row.Number ?? null,
         position: row.Position || "--",
-        gamesPlayed: toNumber(row.Played),
+        gamesPlayed: toCount(row.Played),
         passingYards: toNumber(row.PassingYards),
         rushingYards: toNumber(row.RushingYards),
         receivingYards: toNumber(row.ReceivingYards),
@@ -132,7 +141,7 @@ export async function getPreferredData({ team, season = 2025, include = new Set(
       ? getCachedValue(`stats:${safeSeason}:${teamId}`, CACHE_TTL.stats, () => loadPreferredStats(teamId, safeSeason))
       : Promise.resolve(null),
     wantsPlayers && teamCode
-      ? getCachedValue(`players:${safeSeason}:${teamCode}`, CACHE_TTL.players, () => loadPreferredPlayers(teamCode, safeSeason))
+      ? getCachedValue(`players:v3:${safeSeason}:${teamCode}`, CACHE_TTL.players, () => loadPreferredPlayers(teamCode, safeSeason))
       : Promise.resolve([]),
     wantsSchedule && teamCode
       ? getCachedValue(`schedule:${safeSeason}:${teamCode}`, CACHE_TTL.schedule, () => loadPreferredSchedule(teamCode, safeSeason))
