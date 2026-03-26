@@ -6,7 +6,61 @@
         <link rel="stylesheet" href="/styles.css" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <style>
-        
+            html, body {
+                color: white;
+            }
+
+            .tab-btn {
+                background: transparent;
+                color: white;
+                border: none;
+                padding: 12px 0;
+                transition: background-color 0.15s ease, color 0.15s ease;
+            }
+
+            .tab-btn:hover,
+            .tab-btn:focus-visible {
+                background-color: rgba(255, 255, 255, 0.12) !important;
+                color: #fff;
+            }
+
+            #big {
+                margin-top: 75px;
+                background-color: #000;
+                border-radius: 10px;
+                border: 1px solid white;
+                overflow: hidden;
+            }
+
+            #top {
+                border-bottom: 1px solid white;
+            }
+
+            .conference-panel {
+                display: none;
+                padding: 1rem;
+            }
+
+            .conference-panel.active {
+                display: block;
+            }
+
+            .division-card {
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 10px;
+                background: rgba(255, 255, 255, 0.04);
+                padding: 0.9rem;
+                height: 100%;
+            }
+
+            .division-card h6 {
+                margin-bottom: 0.6rem;
+            }
+
+            .team-list {
+                margin: 0;
+                padding-left: 1rem;
+            }
         </style>
         <title>PlaybookNews</title>
     </head>
@@ -34,8 +88,151 @@
                     </li>
                 </ul>
             </nav>
+
+            <div class="container text-center" id="big">
+                <div class="row" id="top">
+                    <button class="col-md-6 tab-btn" id="afc-tab">AFC</button>
+                    <button class="col-md-6 tab-btn" id="nfc-tab">NFC</button>
+                </div>
+
+                <div id="toggleAFC" class="conference-panel active">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="division-card">
+                                <h6>AFC East</h6>
+                                <ul class="team-list">
+                                    <li>Buffalo</li>
+                                    <li>Miami</li>
+                                    <li>New England</li>
+                                    <li>New York (AFC)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="division-card">
+                                <h6>AFC North</h6>
+                                <ul class="team-list">
+                                    <li>Baltimore</li>
+                                    <li>Cincinnati</li>
+                                    <li>Cleveland</li>
+                                    <li>Pittsburgh</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="division-card">
+                                <h6>AFC South</h6>
+                                <ul class="team-list">
+                                    <li>Houston</li>
+                                    <li>Indianapolis</li>
+                                    <li>Jacksonville</li>
+                                    <li>Tennessee</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="division-card">
+                                <h6>AFC West</h6>
+                                <ul class="team-list">
+                                    <li>Denver</li>
+                                    <li>Kansas City</li>
+                                    <li>Las Vegas</li>
+                                    <li>Los Angeles (AFC)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="toggleNFC" class="conference-panel">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="division-card">
+                                <h6>NFC East</h6>
+                                <ul class="team-list">
+                                    <li>Dallas</li>
+                                    <li>New York (NFC)</li>
+                                    <li>Philadelphia</li>
+                                    <li>Washington</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="division-card">
+                                <h6>NFC North</h6>
+                                <ul class="team-list">
+                                    <li>Chicago</li>
+                                    <li>Detroit</li>
+                                    <li>Green Bay</li>
+                                    <li>Minnesota</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="division-card">
+                                <h6>NFC South</h6>
+                                <ul class="team-list">
+                                    <li>Atlanta</li>
+                                    <li>Carolina</li>
+                                    <li>New Orleans</li>
+                                    <li>Tampa Bay</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="division-card">
+                                <h6>NFC West</h6>
+                                <ul class="team-list">
+                                    <li>Arizona</li>
+                                    <li>Los Angeles (NFC)</li>
+                                    <li>San Francisco</li>
+                                    <li>Seattle</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <script>
+            let color = "#ffffff";
+
+            const afcTabBtn = document.getElementById("afc-tab");
+            const nfcTabBtn = document.getElementById("nfc-tab");
+            const afcPanel = document.getElementById("toggleAFC");
+            const nfcPanel = document.getElementById("toggleNFC");
+
+            function hexToRgba(hex, alpha = 1) {
+                let h = String(hex || "").replace("#", "").trim();
+                if (h.length === 3) h = h.split("").map((c) => c + c).join("");
+                if (h.length !== 6) return `rgba(255, 255, 255, ${alpha})`;
+                const r = parseInt(h.slice(0, 2), 16);
+                const g = parseInt(h.slice(2, 4), 16);
+                const b = parseInt(h.slice(4, 6), 16);
+                return `rgba(${r}, ${g}, ${b}, ${Math.min(1, Math.max(0, alpha))})`;
+            }
+
+            function setConferenceTab(activeTab) {
+                if (!afcTabBtn || !nfcTabBtn || !afcPanel || !nfcPanel) return;
+
+                if (activeTab === "afc") {
+                    afcPanel.classList.add("active");
+                    nfcPanel.classList.remove("active");
+                    afcTabBtn.style.color = color;
+                    afcTabBtn.style.backgroundColor = hexToRgba(color, 0.2);
+                    nfcTabBtn.style.color = "white";
+                    nfcTabBtn.style.backgroundColor = "transparent";
+                    return;
+                }
+
+                nfcPanel.classList.add("active");
+                afcPanel.classList.remove("active");
+                nfcTabBtn.style.color = color;
+                nfcTabBtn.style.backgroundColor = hexToRgba(color, 0.2);
+                afcTabBtn.style.color = "white";
+                afcTabBtn.style.backgroundColor = "transparent";
+            }
+
             (async () => {
                 try {
                     const res = await fetch('/api/me', { credentials: 'include' });
@@ -50,12 +247,14 @@
                         const teamRes = await fetch(`/api/team/${encodeURIComponent(data.preferences.team)}`, { credentials: 'include' });
                         if (teamRes.ok) {
                             const team = await teamRes.json();
-                            const color = team?.colors?.[0];
-                            if (color) {
+                            const navColor = team?.colors?.[0];
+                            if (navColor) {
+                                color = navColor;
                                 document.getElementById('nav').style.background = `linear-gradient(to bottom, ${color}, rgba(0,0,0,0))`;
                             }
                         }
                     }
+                    setConferenceTab("afc");
                 } catch (err) {
                     // User is not logged in: hide gated nav items and show login/signup links.
                     document.querySelectorAll('.log').forEach(el => el.textContent = '');
@@ -65,8 +264,14 @@
                     document.getElementById('change2').href = '/signup';
                     const dropEl = document.getElementById('user-dropdown');
                     if (dropEl) dropEl.style.display = 'none';
+                    setConferenceTab("afc");
                 }
             })();
+
+            if (afcTabBtn && nfcTabBtn) {
+                afcTabBtn.addEventListener("click", () => setConferenceTab("afc"));
+                nfcTabBtn.addEventListener("click", () => setConferenceTab("nfc"));
+            }
         </script>
     </body>
 </html>
