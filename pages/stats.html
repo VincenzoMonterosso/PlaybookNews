@@ -42,10 +42,10 @@
                 <div class="row">
                     <div class="col-md-3">
                         <ul>
-                            <p class="bullet">Thing1: </p>
-                            <p class="bullet">Thing2: </p>
-                            <p class="bullet">Thing3: </p>
-                            <p class="bullet">Thing4: </p>
+                            <p class="bullet">Passing Yards:</p>
+                            <p class="bullet">Rushing Yards:</p>
+                            <p class="bullet">Passing Yards Allowed:</p>
+                            <p class="bullet">Rushing Yards Allowed:</p>
                         </ul>
                     </div>
                     <div class="col-md-8" style="text-align: right;">
@@ -62,10 +62,10 @@
                 <div class="row">
                     <div class="col-md-3">
                         <ul>
-                            <p class="bullet">Thing1: </p>
-                            <p class="bullet">Thing2: </p>
-                            <p class="bullet">Thing3: </p>
-                            <p class="bullet">Thing4: </p>
+                            <p class="bullet">Completion Percentage:</p>
+                            <p class="bullet">Yards per Attempt:</p>
+                            <p class="bullet">Interceptions:</p>
+                            <p class="bullet">Touchdowns:</p>
                         </ul>
                     </div>
                     <div class="col-md-8" style="text-align: right;">
@@ -82,10 +82,10 @@
                 <div class="row">
                     <div class="col-md-3">
                         <ul>
-                            <p class="bullet">Thing1: </p>
-                            <p class="bullet">Thing2: </p>
-                            <p class="bullet">Thing3: </p>
-                            <p class="bullet">Thing4: </p>
+                            <p class="bullet">Attempts:</p>
+                            <p class="bullet">Yards per Attempt:</p>
+                            <p class="bullet">Fumbles Lost:</p>
+                            <p class="bullet">Rushing Touchdowns:</p>
                         </ul>
                     </div>
                     <div class="col-md-8" style="text-align: right;">
@@ -102,10 +102,9 @@
                 <div class="row">
                     <div class="col-md-3">
                         <ul>
-                            <p class="bullet">Thing1: </p>
-                            <p class="bullet">Thing2: </p>
-                            <p class="bullet">Thing3: </p>
-                            <p class="bullet">Thing4: </p>
+                            <p class="bullet">Field Goal%:</p>
+                            <p class="bullet">Average Return Yards:</p>
+                            <p class="bullet">Punt Yards:</p>
                         </ul>
                     </div>
                     <div class="col-md-8" style="text-align: right;">
@@ -143,12 +142,6 @@
             </div>
         </div>
         <script type="module">
-            const TEAM_LABELS = [
-                "Passing Yards", "Rushing Yards", "Passing Yards Allowed", "Rushing Yards Allowed",
-                "Completion Percentage", "Yards per Attempt", "Interceptions", "Touchdowns",
-                "Attempts", "Yards per Attempt", "Fumbles Lost", "Rushing Touchdowns",
-                "Field Goal%", "Average Return Yards", "Punt Yards", ""
-            ];
 
             const TEAM_KEYS = [
                 "Passing Yards", "Rushing Yards", "Opponent Passing Yards", "Opponent Rushing Yards",
@@ -165,8 +158,7 @@
             const teamInfo = document.getElementById("team-info");
             const playersInfo = document.getElementById("players-info");
 
-            // Collects all elms of tyoe and puts them in an array
-            const bulletEls = Array.from(document.querySelectorAll(".bullet"));
+            // Collects all numeric output elements into an array
             const numEls = Array.from(document.querySelectorAll(".num"));
 
 
@@ -210,14 +202,12 @@
             }
 
             // renderTeamStats Helper
-            // Brief: Writes team stat labels + values into the visible rows
+            // Brief: Writes team stat values into the rows
             // Return: bool (success or fail)
             function renderTeamStats() {
                 const hasStats = !!teamStats && typeof teamStats === "object";
-                TEAM_LABELS.forEach((label, i) => {
-                    if (bulletEls[i]) bulletEls[i].textContent = label ? `${label}:` : "";
-                    const key = TEAM_KEYS[i];
-                    const value = key && teamStats ? teamStats[key] : "";
+                TEAM_KEYS.forEach((statKey, i) => {
+                    const value = statKey && teamStats ? teamStats[statKey] : "";
                     if (numEls[i]) numEls[i].textContent = toDisplayValue(value);
                 });
                 return hasStats;
