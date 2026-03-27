@@ -274,21 +274,21 @@
 
         (async () => {
             try {
-            const res = await fetch('/api/me', { credentials: 'include' });
-            if (!res.ok) throw new Error('not logged in');
-            const data = await res.json();
+            const preloadRes = await fetch('/api/me', { credentials: 'include' });
+            if (!preloadRes.ok) throw new Error('not logged in');
+            const preload = await preloadRes.json();
 
-            user.textContent = data?.username || '';
+            user.textContent = preload?.username || '';
             
             if (dropEl) dropEl.style.display = 'block';
 
-            if (data.preferences?.team) {
-                const teamRes = await fetch(`/api/team/${encodeURIComponent(data.preferences.team)}`, { credentials: 'include' });
+            const preferredTeamKey = preload?.preferences?.team;
+            if (preferredTeamKey) {
+                const teamRes = await fetch(`/api/team/${encodeURIComponent(preferredTeamKey)}`, { credentials: 'include' });
                 if (teamRes.ok) {
-                const team = await teamRes.json();
-                const color = team?.colors?.[0];
-                if (color) {
-                    nav.style.background = `linear-gradient(to bottom, ${color}, rgba(0,0,0,0))`;
+                const preferredTeam = await teamRes.json();
+                if (preferredTeam?.colors?.[0]) {
+                    nav.style.background = `linear-gradient(to bottom, ${preferredTeam.colors[0]}, rgba(0,0,0,0))`;
                 }
                 }
             }

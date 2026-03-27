@@ -55,11 +55,17 @@
 
             .division-card h6 {
                 margin-bottom: 0.6rem;
+                padding-bottom: 0.15rem;
             }
 
             .team-list {
                 margin: 0;
-                padding-left: 1rem;
+                padding-left: 0;
+            }
+
+            .team-list p {
+                margin: 0;
+                padding-top: 0.1rem;
             }
         </style>
         <title>PlaybookNews</title>
@@ -74,7 +80,6 @@
                     <li><a href="/dashboard" class="log" id="change1">Dashboard</a></li>
                     <li><a href="/news" class="log" id="change2">News</a></li>
                     <li><a href="/teams" class="log" id="change3">Teams</a></li>
-                    <li><a href="/players" class="log">Players</a></li>
                     <li><a href="/schedule" class="log">Schedule</a></li>
                     <li><a href="/stats" class="log">Stats</a></li>
                     <li class="drop" id="user-dropdown" style="display:none">
@@ -101,10 +106,10 @@
                             <div class="division-card">
                                 <h6>AFC East</h6>
                                 <ul class="team-list">
-                                    <li>Buffalo</li>
-                                    <li>Miami</li>
-                                    <li>New England</li>
-                                    <li>New York (AFC)</li>
+                                    <p>Buffalo</p>
+                                    <p>Miami</p>
+                                    <p>New England</p>
+                                    <p>New York (AFC)</p>
                                 </ul>
                             </div>
                         </div>
@@ -112,10 +117,10 @@
                             <div class="division-card">
                                 <h6>AFC North</h6>
                                 <ul class="team-list">
-                                    <li>Baltimore</li>
-                                    <li>Cincinnati</li>
-                                    <li>Cleveland</li>
-                                    <li>Pittsburgh</li>
+                                    <p>Baltimore</p>
+                                    <p>Cincinnati</p>
+                                    <p>Cleveland</p>
+                                    <p>Pittsburgh</p>
                                 </ul>
                             </div>
                         </div>
@@ -123,10 +128,10 @@
                             <div class="division-card">
                                 <h6>AFC South</h6>
                                 <ul class="team-list">
-                                    <li>Houston</li>
-                                    <li>Indianapolis</li>
-                                    <li>Jacksonville</li>
-                                    <li>Tennessee</li>
+                                    <p>Houston</p>
+                                    <p>Indianapolis</p>
+                                    <p>Jacksonville</p>
+                                    <p>Tennessee</p>
                                 </ul>
                             </div>
                         </div>
@@ -134,10 +139,10 @@
                             <div class="division-card">
                                 <h6>AFC West</h6>
                                 <ul class="team-list">
-                                    <li>Denver</li>
-                                    <li>Kansas City</li>
-                                    <li>Las Vegas</li>
-                                    <li>Los Angeles (AFC)</li>
+                                    <p>Denver</p>
+                                    <p>Kansas City</p>
+                                    <p>Las Vegas</p>
+                                    <p>Los Angeles (AFC)</p>
                                 </ul>
                             </div>
                         </div>
@@ -150,10 +155,10 @@
                             <div class="division-card">
                                 <h6>NFC East</h6>
                                 <ul class="team-list">
-                                    <li>Dallas</li>
-                                    <li>New York (NFC)</li>
-                                    <li>Philadelphia</li>
-                                    <li>Washington</li>
+                                    <p>Dallas</p>
+                                    <p>New York (NFC)</p>
+                                    <p>Philadelphia</p>
+                                    <p>Washington</p>
                                 </ul>
                             </div>
                         </div>
@@ -161,10 +166,10 @@
                             <div class="division-card">
                                 <h6>NFC North</h6>
                                 <ul class="team-list">
-                                    <li>Chicago</li>
-                                    <li>Detroit</li>
-                                    <li>Green Bay</li>
-                                    <li>Minnesota</li>
+                                    <p>Chicago</p>
+                                    <p>Detroit</p>
+                                    <p>Green Bay</p>
+                                    <p>Minnesota</p>
                                 </ul>
                             </div>
                         </div>
@@ -172,10 +177,10 @@
                             <div class="division-card">
                                 <h6>NFC South</h6>
                                 <ul class="team-list">
-                                    <li>Atlanta</li>
-                                    <li>Carolina</li>
-                                    <li>New Orleans</li>
-                                    <li>Tampa Bay</li>
+                                    <p>Atlanta</p>
+                                    <p>Carolina</p>
+                                    <p>New Orleans</p>
+                                    <p>Tampa Bay</p>
                                 </ul>
                             </div>
                         </div>
@@ -183,10 +188,10 @@
                             <div class="division-card">
                                 <h6>NFC West</h6>
                                 <ul class="team-list">
-                                    <li>Arizona</li>
-                                    <li>Los Angeles (NFC)</li>
-                                    <li>San Francisco</li>
-                                    <li>Seattle</li>
+                                    <p>Arizona</p>
+                                    <p>Los Angeles (NFC)</p>
+                                    <p>San Francisco</p>
+                                    <p>Seattle</p>
                                 </ul>
                             </div>
                         </div>
@@ -215,26 +220,23 @@
 
             (async () => {
                 try {
-                    const res = await fetch('/api/me', { credentials: 'include' });
-                    if (!res.ok) throw new Error('not logged in');
-                    const data = await res.json();
+                    const preloadRes = await fetch('/api/me', { credentials: 'include' });
+                    if (!preloadRes.ok) throw new Error('not logged in');
+                    const preload = await preloadRes.json();
 
-                    document.getElementById('user').textContent = data?.username || '';
+                    document.getElementById('user').textContent = preload?.username || '';
                     const dropEl = document.getElementById('user-dropdown');
                     if (dropEl) dropEl.style.display = 'block';
-
-                    if (data.preferences?.team) {
-                        const teamRes = await fetch(`/api/team/${encodeURIComponent(data.preferences.team)}`, { credentials: 'include' });
+                    const preferredTeamKey = preload?.preferences?.team;
+                    if (preferredTeamKey) {
+                        const teamRes = await fetch(`/api/team/${encodeURIComponent(preferredTeamKey)}`, { credentials: 'include' });
                         if (teamRes.ok) {
-                            const team = await teamRes.json();
-                            const navColor = team?.colors?.[0];
-                            const secondaryColor = team?.colors?.[1];
-                            if (navColor) {
-                                color = navColor;
-                                document.getElementById('nav').style.background = `linear-gradient(to bottom, ${color}, rgba(0,0,0,0))`;
+                            const preferredTeam = await teamRes.json();
+                            if (preferredTeam?.colors?.[0]) {
+                                document.documentElement.style.setProperty('--team-primary', preferredTeam.colors[0]);
                             }
-                            if (secondaryColor) {
-                                document.documentElement.style.setProperty('--team-secondary', secondaryColor);
+                            if (preferredTeam?.colors?.[1]) {
+                                document.documentElement.style.setProperty('--team-secondary', preferredTeam.colors[1]);
                             }
                         }
                     }
