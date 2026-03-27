@@ -41,6 +41,11 @@
             .bullet {
                 text-align: left;
             }
+
+            #players-info {
+                display: none;
+                min-height: 260px;
+            }
         </style>
         <title>PlaybookNews</title>
     </head>
@@ -54,7 +59,6 @@
                     <li><a href="/dashboard" class="log" id="change1">Dashboard</a></li>
                     <li><a href="/news" class="log" id="change2">News</a></li>
                     <li><a href="/teams" class="log" id="change3">Teams</a></li>
-                    <li><a href="/players" class="log">Players</a></li>
                     <li><a href="/schedule" class="log">Schedule</a></li>
                     <li><a href="/stats" class="log">Stats</a></li>
                     <li class="drop" id="user-dropdown" style="display:none">
@@ -75,8 +79,8 @@
                 <button class="col-md-6 tab-btn" id="team">Team</button>
                 <button class="col-md-6 tab-btn" id="players">Player</button>
             </div>
-            <div id="info">
-                <h6 id="section1" style="padding-top: 8px;">Info1</h6>
+            <div id="team-info">
+                <h6 id="section1" style="padding-top: 8px;">Yardage</h6>
                 <div class="row">
                     <div class="col-md-3">
                         <ul>
@@ -96,7 +100,7 @@
                     </div>
                 </div>
 
-                <h6 id="section2">Info2</h6>
+                <h6 id="section2">Passing</h6>
                 <div class="row">
                     <div class="col-md-3">
                         <ul>
@@ -116,7 +120,7 @@
                     </div>
                 </div>
 
-                <h6 id="section3">Info3</h6>
+                <h6 id="section3">Rushing</h6>
                 <div class="row">
                     <div class="col-md-3">
                         <ul>
@@ -136,7 +140,7 @@
                     </div>
                 </div>
 
-                <h6 id="section4">Info4</h6>
+                <h6 id="section4">Special Teams</h6>
                 <div class="row">
                     <div class="col-md-3">
                         <ul>
@@ -153,6 +157,30 @@
                             <p class="num">y</p>
                             <p class="num">z</p>
                         </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="players-info">
+                <h1 class="mb-3">Top Players</h1>
+                <p class="text-white-50 mb-0" id="players-subtitle">Loading preferred team players...</p>
+                <div class="panel mt-3">
+                    <div class="table-wrap">
+                        <table class="table players-table table-sm align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Pos</th>
+                                    <th>GP</th>
+                                    <th>TDs</th>
+                                    <th>Pass Yds</th>
+                                    <th>Rush Yds</th>
+                                    <th>Rec Yds</th>
+                                    <th>Tackles</th>
+                                </tr>
+                            </thead>
+                            <tbody id="players-body">
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -177,6 +205,8 @@
 
             const teamBtn = document.getElementById("team");
             const playerBtn = document.getElementById("players");
+            const teamInfo = document.getElementById("team-info");
+            const playersInfo = document.getElementById("players-info");
 
             // Collects all elms of tyoe and puts them in an array
             const bulletEls = Array.from(document.querySelectorAll(".bullet"));
@@ -215,41 +245,74 @@
                 return value === null || value === undefined || value === "" ? "--" : String(value);
             }
 
-            // setSections
-            // @params: none
-            // This sets the sections for team stats
-            // return: none
-            function setSections() {
-                document.getElementById("section1").textContent = "Yardage";
-                document.getElementById("section2").textContent = "Passing";
-                document.getElementById("section3").textContent = "Rushing";
-                document.getElementById("section4").textContent = "Special Teams";
+            function formatStat(value) {
+                if (value === null || value === undefined || value === "") return "--";
+                const num = Number(value);
+                if (!Number.isFinite(num)) return toDisplayValue(value);
+                return Number.isInteger(num) ? String(num) : String(Number(num.toFixed(2)));
             }
 
             // renderTeamStats Helper
             // Brief: Writes team stat labels + values into the visible rows
-            // Return:
-            // void -> updates the DOM in-place
+            // Return: bool (success or fail)
             function renderTeamStats() {
-                setSections();
-
+                const hasStats = !!teamStats && typeof teamStats === "object";
                 TEAM_LABELS.forEach((label, i) => {
                     if (bulletEls[i]) bulletEls[i].textContent = label ? `${label}:` : "";
                     const key = TEAM_KEYS[i];
                     const value = key && teamStats ? teamStats[key] : "";
                     if (numEls[i]) numEls[i].textContent = toDisplayValue(value);
                 });
+                return hasStats;
             }
 
-            // TODO: Implement/GetRidOf
-            function renderPlayerPlaceholder() {
-                // Keeping the player tab simple until a player-stats endpoint is added.
-                bulletEls.forEach((el, i) => el.textContent = i === 0 ? "Player stats:" : "");
-                numEls.forEach((el, i) => el.textContent = i === 0 ? "Coming soon" : "");
-                document.getElementById("section1").textContent = "Players";
-                document.getElementById("section2").textContent = "";
-                document.getElementById("section3").textContent = "";
-                document.getElementById("section4").textContent = "";
+            // creatPlayerRow
+            // @param1: player, a player object
+            // Brief: Creates an element (row) for the inputted player
+            // return: the table row
+            function createPlayerRow(player) {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${toDisplayValue(player.name)}</td>
+                    <td>${toDisplayValue(player.position)}</td>
+                    <td>${formatStat(player.gamesPlayed)}</td>
+                    <td>${formatStat(player.totalTouchdowns)}</td>
+                    <td>${formatStat(player.passingYards)}</td>
+                    <td>${formatStat(player.rushingYards)}</td>
+                    <td>${formatStat(player.receivingYards)}</td>
+                    <td>${formatStat(player.tackles)}</td>
+                `;
+                return tr;
+            }
+
+            // renderPlayerStats Helper
+            // @param1: players
+            // Brief: renders player rows per each player of the preferred team
+            // return: bool (success or fail)
+            function renderPlayerStats(players) {
+                const body = document.getElementById("players-body");
+                body.innerHTML = "";
+
+                if (!Array.isArray(players) || players.length === 0) {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `<td colspan="8" class="text-white-50">No player data available.</td>`;
+                    body.appendChild(tr);
+                    return false;
+                }
+
+                players.forEach((player) => body.appendChild(createPlayerRow(player)));
+                return true;
+            }
+
+            function setActivePane(activeTab) {
+                if (!teamInfo || !playersInfo) return;
+                if (activeTab === "team") {
+                    teamInfo.style.display = "block";
+                    playersInfo.style.display = "none";
+                    return;
+                }
+                teamInfo.style.display = "none";
+                playersInfo.style.display = "block";
             }
 
             // setTabStyles
@@ -275,9 +338,10 @@
 
             // setupPage
             // Brief: the actual stuffs
-            async function setupPage() {
+            (async () => { 
+                let players = [];
                 try {
-                    const preloadRes = await fetch("/api/preferred-data?include=stats", { credentials: "include" });
+                    const preloadRes = await fetch("/api/preferred-data?include=stats,players", { credentials: "include" });
                     if (!preloadRes.ok) throw new Error("not logged in");
                     const preload = await preloadRes.json();
 
@@ -292,9 +356,33 @@
                         document.getElementById("nav").style.background = `linear-gradient(to bottom, ${color}, rgba(0,0,0,0))`;
                     }
                     teamStats = preload?.stats ?? null;
+                    players = preload?.players ?? [];
 
-                    renderTeamStats();
+                    let plyr = renderPlayerStats(players);
+                    let team = renderTeamStats(); // default option
                     setTabStyles("team");
+                    setActivePane("team");
+
+
+                    if (teamBtn && playerBtn) { // change tab
+                        teamBtn.addEventListener("click", () => {
+                            if (!team) { // why not try again if it failed?
+                                renderPlayerStats();
+                            }
+                            setTabStyles("team");
+                            setActivePane("team");
+                        });
+
+                        playerBtn.addEventListener("click", () => {
+                            
+                            if (!plyr) { 
+                                renderPlayerStats(players);
+                            }
+
+                            setTabStyles("players");
+                            setActivePane("players");
+                        });
+                    }
                 } catch (err) { // Not logged in
                     document.querySelectorAll(".log").forEach((el) => el.textContent = "");
                     document.getElementById("change1").textContent = "Login";
@@ -304,22 +392,9 @@
                     const dropEl = document.getElementById("user-dropdown");
                     if (dropEl) dropEl.style.display = "none";
                     renderTeamStats();
+                    setActivePane("team");
                 }
-            }
-
-            if (teamBtn && playerBtn) { // change tab
-                teamBtn.addEventListener("click", () => {
-                    renderTeamStats();
-                    setTabStyles("team");
-                });
-
-                playerBtn.addEventListener("click", () => {
-                    renderPlayerPlaceholder();
-                    setTabStyles("players");
-                });
-            }
-
-            setupPage();
+            })();
         </script>
     </body>
 </html>

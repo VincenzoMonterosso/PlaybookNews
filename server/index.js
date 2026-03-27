@@ -315,26 +315,6 @@ app.get("/news", requireAuthPage, async (req,res) => {
     }
 });
 
-// App Players Get Request
-// Brief: Serves players page IFF user is logged in
-app.get("/players", requireAuthPage, async (req,res) => {
-    try {
-        const db = getDB();
-        const user = await db.collection("users").findOne(
-            {username: req.user?.username},
-            {projection: {preferences: 1, username: 1}}
-        );
-
-        if (!user) {
-            return res.redirect("/");
-        }
-
-        return res.sendFile(path.join(__dirname, "../pages/players.html"));
-    } catch (err) {
-        return res.redirect("/");
-    }
-});
-
 // App Schedule Get Request
 // Brief: Serves schedule page IFF user is logged in
 app.get("/schedule", requireAuthPage, async (req,res) => {
