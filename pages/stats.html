@@ -33,17 +33,6 @@
         </div>
 
         <div class="container text-center" id="big">
-            <div style="display:flex;justify-content:flex-end;align-items:center;gap:.5rem;padding:.75rem 1rem 0;">
-                <label for="season-select">Season</label>
-                <select id="season-select" style="background:#000;color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:6px;padding:.2rem .5rem;">
-                    <option value="2025">2025</option>
-                    <option value="2024">2024</option>
-                    <option value="2023">2023</option>
-                    <option value="2022">2022</option>
-                    <option value="2021">2021</option>
-                    <option value="2020">2020</option>
-                </select>
-            </div>
             <div class="row" id="top">
                 <button class="col-md-6 tab-btn" id="team">Team</button>
                 <button class="col-md-6 tab-btn" id="players">Player</button>
@@ -55,8 +44,8 @@
                         <ul>
                             <p class="bullet">Passing Yards:</p>
                             <p class="bullet">Rushing Yards:</p>
-                            <p class="bullet">Passing Yards Allowed:</p>
-                            <p class="bullet">Rushing Yards Allowed:</p>
+                            <p class="bullet">Net Passing Yards:</p>
+                            <p class="bullet">Passing Yards per Game:</p>
                         </ul>
                     </div>
                     <div class="col-md-8" style="text-align: right;">
@@ -155,7 +144,7 @@
         <script type="module">
 
             const TEAM_KEYS = [
-                "Passing Yards", "Rushing Yards", "Opponent Passing Yards", "Opponent Rushing Yards",
+                "Passing Yards", "Rushing Yards", "Net Passing Yards", "Passing Yards per Game",
                 "Completion Percentage", "Pass Yards per Attempt", "Interceptions", "Pass Touchdowns",
                 "Attempts", "Rush Yards per Attempt", "Fumbles Lost", "Rushing Touchdowns",
                 "Field Goal%", "Average Return Yards", "Punt Yards", null
@@ -166,13 +155,8 @@
 
             const teamBtn = document.getElementById("team");
             const playerBtn = document.getElementById("players");
-            const seasonSelect = document.getElementById("season-select");
             const teamInfo = document.getElementById("team-info");
             const playersInfo = document.getElementById("players-info");
-            const allowedSeasons = new Set(["2025", "2024", "2023", "2022", "2021", "2020"]);
-            const urlSeason = new URLSearchParams(window.location.search).get("season");
-            const selectedSeason = allowedSeasons.has(urlSeason) ? urlSeason : "2025";
-            if (seasonSelect) seasonSelect.value = selectedSeason;
 
             // Collects all numeric output elements into an array
             const numEls = Array.from(document.querySelectorAll(".num"));
@@ -304,7 +288,7 @@
             (async () => { 
                 let players = [];
                 try {
-                    const preloadRes = await fetch(`/api/preferred-data?include=stats,players&season=${encodeURIComponent(selectedSeason)}`, { credentials: "include" });
+                    const preloadRes = await fetch("/api/preferred-data?include=stats,players", { credentials: "include" });
                     if (!preloadRes.ok) throw new Error("not logged in");
                     const preload = await preloadRes.json();
 
@@ -318,8 +302,6 @@
                         document.documentElement.style.setProperty('--team-primary', preferredTeam.colors[0]);
                     }
                     teamStats = preload?.stats ?? null;
-                    console.log(teamStats);
-                    console.log(preload?.season);
                     players = preload?.players ?? [];
 
                     let plyr = renderPlayerStats(players);
@@ -331,7 +313,7 @@
                     if (teamBtn && playerBtn) { // change tab
                         teamBtn.addEventListener("click", () => {
                             if (!team) { // why not try again if it failed?
-                                renderPlayerStats();
+                                team = renderTeamStats();
                             }
                             setTabStyles("team");
                             setActivePane("team");
@@ -372,16 +354,6 @@
                     if (!drop.contains(e.target)) {
                         drop.classList.remove("open");
                     }
-                });
-            }
-
-            if (seasonSelect) {
-                seasonSelect.addEventListener("change", () => {
-                    const next = seasonSelect.value;
-                    if (!allowedSeasons.has(next)) return;
-                    const params = new URLSearchParams(window.location.search);
-                    params.set("season", next);
-                    window.location.search = params.toString();
                 });
             }
         </script>

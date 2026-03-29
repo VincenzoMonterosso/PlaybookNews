@@ -6,7 +6,7 @@ import { connectDB, getDB } from "./db.js";
 import { loginUser } from "./getReqs/loginUser.js";
 import { requireAuth, requireAuthPage, reverseAuthPage, reverseAuth } from "./auth.js";
 import { createUser } from "./setReqs/createUser.js";
-import { fetchData } from "./fetch.js";
+import { DEFAULT_SEASON } from "./fetch.js";
 import { getTeamByPreferenceKey } from "./teamData.js";
 import { getPreferredData } from "./preferredData.js";
 import path from "path";
@@ -471,7 +471,7 @@ app.get("/api/preferred-data", requireAuth, async (req, res) => {
             include.add("schedule");
         }
 
-        const season = Number(req.query.season) || 2025;
+        const season = DEFAULT_SEASON;
         const preferredData = await getPreferredData({ team, season, include });
 
         return res.json({
@@ -485,30 +485,6 @@ app.get("/api/preferred-data", requireAuth, async (req, res) => {
         return res.status(500).json({ error: "Server error" });
     }
 });
-
-// App Team Stats Get Request
-// Brief: Proxies team stats from SportsDataIO for a given team id
-app.get("/api/team/:id/stats", requireAuth, async (req, res) => {
-    try {
-        const teamId = Number(req.params.id);
-        const season = Number(req.query.season) || 2025;
-
-        if (!Number.isFinite(teamId)) {
-            return res.status(400).json({ error: "Invalid team id" });
-        }
-
-        const stats = await fetchData(teamId, season);
-        if (!stats || stats.ok !== "yes") {
-            return res.status(502).json({ error: "Unable to fetch team stats" });
-        }
-
-        return res.json(stats);
-    } catch (err) {
-        return res.status(500).json({ error: "Server error" });
-    }
-});
-
-
 
 console.log("Connecting to database and starting server...");
 await connectDB();
