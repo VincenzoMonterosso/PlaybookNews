@@ -44,8 +44,15 @@ app.post("/api/login", reverseAuth, async (req, res) => {
   return res.json({ username: req.body.username, preferences: result.preferences });
 });
 
-// App Post User Request
-// Brief: Creates a new user and logs in
+/*
+ App Post User Request
+ Brief: Creates a new user and logs in
+ Uses loginUser helper from loginUser.js
+    * loginUser returns an object (if valid login)
+        - obj.passed == valid login
+        - obj.chocolateChipCookie == jwt
+        - obj.preferences == user's preferences
+ */
 app.post("/api/user", reverseAuth, async (req,res) => {
     try {
         const userId = await createUser(req.body);
@@ -69,6 +76,7 @@ app.post("/api/user", reverseAuth, async (req,res) => {
 
 // App Post Preference Request
 // Brief: Updates the Preferences Object
+// Returns a valid/invalid status in response object
 app.post("/api/preferences", requireAuth,  async (req, res) => {
     try {
         const preferences = req.body.preferences;
@@ -86,6 +94,7 @@ app.post("/api/preferences", requireAuth,  async (req, res) => {
             return res.status(401).json({ error: "not logged in" });
         }
 
+        // Updates preferences
         const db = getDB();
         await db.collection("users").updateOne(
             { _id: new ObjectId(req.user.id) },
@@ -98,6 +107,9 @@ app.post("/api/preferences", requireAuth,  async (req, res) => {
     }
 });
 
+// App Post Update Username
+// Brief: Validates login, new username, and updates it
+// Returns response object with status
 app.post('/api/updateUsr', requireAuth, async (req,res) => {
     try {
         const db = getDB();
