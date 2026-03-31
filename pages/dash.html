@@ -34,7 +34,22 @@
                 </ul>
             </nav>
         </div>
+        <div id="top">
+            <h1 id="title">Welcome, </h1>
+            <h6 id="teamAndRec"></h6>
+        </div>
         <script>
+
+            function setHead(preload) {
+                if (preload) {
+                    const head = document.getElementById("title");
+                    const second = document.getElementById("teamAndRec");
+
+                    if (head && second) {
+                        head.textContent = `Welcome, ${preload?.username}`;
+                    }
+                }
+            }
             (async () => {
                 try {
                     const preloadRes = await fetch('/api/me', { credentials: 'include' });
@@ -55,6 +70,8 @@
                             }
                         }
                     }
+
+                    setHead(preload);
                 } catch (err) {
                     // User is not logged in: hide gated nav items and show login/signup links.
                     document.querySelectorAll('.log').forEach(el => el.textContent = '');
@@ -65,6 +82,9 @@
                     const dropEl = document.getElementById('user-dropdown');
                     if (dropEl) dropEl.style.display = 'none';
                 }
+
+
+                
             })();
 
             // dropdown toggle
